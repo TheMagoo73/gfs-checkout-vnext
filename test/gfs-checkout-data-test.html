@@ -1,0 +1,52 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>gfs-checkout-data test</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../gfs-checkout-data.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+        <gfs-checkout-data></gfs-checkout-data>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('gfs-checkout-data', function() {
+
+        var server;
+
+        setup(function(){
+          server. sinon.fakeServer.create();
+        });
+
+        teardown(function(){
+          server.restore();
+        });
+
+        test('instantiating the element works', function() {
+          var element = fixture('basic');
+          assert.equal(element.is, 'gfs-checkout-data');
+        });
+
+        test('can create bearer token header', function() {
+          var element = fixture('basic');
+
+          var header = element._getBearerToken();
+          assert.isDefined(header.Authorization);
+          assert.isString(header.Authorization);
+          assert.equal(header.Authorization.substring(0, 7), "Bearer ");
+          assert.include(header.Authorization, element.checkoutToken);
+        });
+
+      });
+    </script>
+  </body>
+</html>

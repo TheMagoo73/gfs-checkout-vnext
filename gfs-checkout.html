@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="gfs-checkout-data.html">
+
+<!--
+`gfs-checkout`
+A better GFS Checkout web component implementation
+
+@demo demo/index.html
+-->
+
+<dom-module id="gfs-checkout">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <gfs-checkout-data checkout-token="1234"></gfs-checkout-data>
+    <h2>Hello [[prop1]]</h2>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'gfs-checkout',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'gfs-checkout',
+        },
+      },
+
+    });
+  </script>
+</dom-module>
