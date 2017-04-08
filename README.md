@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/TheMagoo73/codepen-embed.svg?branch=master)](https://travis-ci.org/TheMagoo73/codepen-embed)
-[![Sauce Status](https://saucelabs.com/buildstatus/TheMagoo73)](https://saucelabs.com/beta/builds/d30108eaae5941acbaf37d8478564b1b)
+[![Build Status](https://travis-ci.org/TheMagoo73/codepen-embed.svg?branch=master)](https://travis-ci.org/TheMagoo73/gfs-checkout-vnext.svg?branch=master)
+[![Build Status](https://saucelabs.com/buildstatus/TheMagoo73)](https://saucelabs.com/beta/builds/11210c11bbf4456dafe1914dbed26428)
 
 # \<gfs-checkout\>
 
