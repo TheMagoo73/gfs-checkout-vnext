@@ -66,9 +66,30 @@ Communication proxy and data handler for the Checkout API
       },
       _newOptionsAvailable: function(e) {
         this.fire('options', {});
+
+        var elem = this;
+
+        this._processStandard(function(options){
+          elem.fire('newStandardOptions', options);
+        });
+        this._processDayDefinite(function(dayDefinite){
+          elem.fire('newDayDefiniteOptions', dayDefinite);
+        });
+        this._processDropPoints(function(dropPoints){
+          elem.fire('newDropPoints', dropPoints);
+        });
       },
       _getBearerToken: function() {
         return { "authorization": "Bearer " + this.checkoutToken };
+      },
+      _processStandard: function(callBack) {
+        return callBack( { foo : "bar" } );
+      },
+      _processDayDefinite: function(callBack) {
+        return callBack( { foo : "bar" } );
+      },
+      _processDropPoints: function(callBack) {
+        return callBack( { foo : "bar" } );
       }
     });
   </script>
