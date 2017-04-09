@@ -11,14 +11,12 @@ Communication proxy and data handler for the Checkout API
 <dom-module id="gfs-checkout-data">
   <template>
     <iron-ajax id='createCheckoutSession'
-      url="http://rest.api.checkout.justshoutgfs.com/api/CheckoutSession"
       debounce-duration="300"
       handle-as="json"
       method="POST"
       on-response="_newSessionStarted"
       content-type="application/json"></iron-ajax>
     <iron-ajax id='getCheckoutOptions'
-      url="http://rest.api.checkout.justshoutgfs.com/api/CheckoutSession"
       debounce-duration="300"
       handle-as="json"
       method="GET"
@@ -32,6 +30,10 @@ Communication proxy and data handler for the Checkout API
       is: 'gfs-checkout-data',
 
       properties: {
+        checkoutUri: {
+          type: String,
+          value: "http://rest.api.checkout.justshoutgfs.com/api"
+        },
         checkoutRequest: {
           type: String,
           value: ""
@@ -48,6 +50,7 @@ Communication proxy and data handler for the Checkout API
         if(request === "" || token === "") return;
 
         var server = this.$.createCheckoutSession;
+        server.url = this.checkoutUri + "/CheckoutSession"
         server.headers = this._getBearerToken();
         server.body = JSON.parse(request);
 
@@ -57,11 +60,12 @@ Communication proxy and data handler for the Checkout API
         var server = this.$.getCheckoutOptions;
         var sessionId = e.detail.response.substring(e.detail.response.lastIndexOf("/") + 1);
 
-        server.url = server.url + "/" + sessionId;
+        server.url = this.checkoutUri + "/CheckoutSession/" + sessionId;
         server.headers = this._getBearerToken();
         server.generateRequest();
       },
       _newOptionsAvailable: function(e) {
+        this.fire('options', {});
       },
       _getBearerToken: function() {
         return { "authorization": "Bearer " + this.checkoutToken };

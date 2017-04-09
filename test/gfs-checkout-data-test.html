@@ -22,6 +22,11 @@
         <gfs-checkout-data checkout-request='{"foo":"bar"}'></gfs-checkout-data>
       </template>
     </test-fixture>
+    <test-fixture id="events">
+      <template>
+        <gfs-checkout-data checkout-uri="/checkout" checkout-request='{"foo":"bar"}'></gfs-checkout-data>
+      </template>
+    </test-fixture>
 
     <script type="text/javascript">
       suite('gfs-checkout-data', function() {
@@ -64,6 +69,57 @@
             assert.equal(server.requests[0].requestHeaders.authorization, "Bearer 5678");
           });
 
+        });
+
+        suite('dispatches events', function() {
+
+          var server;
+
+          setup(function(){
+            server = sinon.fakeServer.create();
+
+            server.respondWith(
+              'POST',
+              /\/checkout.*/, [
+                200,
+                {
+                  json: { 'Content-Type': 'application/json' }
+                },
+                '"/api/checkoutSession/e6189aea-fc6c-48e8-a3e8-f7c9d7e8af2a"'
+              ]
+            );
+
+            server.respondWith(
+              'GET',
+              /\/checkout.*/, [
+                200,
+                {
+                  json: { 'Content-Type': 'application/json' }
+                },
+                '{"success":"true"}'
+              ]
+            );
+          });
+
+          teardown(function(){
+            server.restore();
+          });
+
+          test('fires event when download completes', function() {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              assert(eventSpy.called);
+              assert(eventSpy.calledOnce);
+              done();
+            }, 2000);
+
+            element.addEventListener('options', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
         });
       });
     </script>
