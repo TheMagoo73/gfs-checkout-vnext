@@ -29,6 +29,7 @@
     </test-fixture>
 
     <script type="text/javascript">
+
       suite('gfs-checkout-data', function() {
 
         suite('basic tests', function() {
@@ -114,7 +115,7 @@
               assert(eventSpy.called);
               assert(eventSpy.calledOnce);
               done();
-            }, 2000);
+            }, 1000);
 
             element.addEventListener('getoptionsstart', eventSpy);
             element.checkoutToken = '1234';
@@ -131,10 +132,100 @@
                 assert(eventSpy.called);
                 assert(eventSpy.calledOnce);
                 done();
-              }, 2000);
-            }, 2000);
+              }, 1000);
+            }, 1000);
 
             element.addEventListener('getoptionscomplete', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event with new drop points', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 1000);
+            }, 1000);
+
+            element.addEventListener('newdroppoints', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event with new standard services', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 1000);
+            }, 1000);
+
+            element.addEventListener('newstandardoptions', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event with new standard drop point services', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 1000);
+            }, 1000);
+
+            element.addEventListener('newstandarddroppointoptions', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event with new day definite services', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 1000);
+            }, 1000);
+
+            element.addEventListener('newdaydefiniteoptions', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event with new day definite drop point services', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 1000);
+            }, 1000);
+
+            element.addEventListener('newdaydefinitedroppointoptions', eventSpy);
             element.checkoutToken = '1234';
             server.respond();
           });
