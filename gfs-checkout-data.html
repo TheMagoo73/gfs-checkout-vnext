@@ -49,6 +49,8 @@ Communication proxy and data handler for the Checkout API
       _updateResponse: function(request, token) {
         if(request === "" || token === "") return;
 
+        this.fire('getoptionsstart')
+
         var server = this.$.createCheckoutSession;
         server.url = this.checkoutUri + "/CheckoutSession"
         server.headers = this._getBearerToken();
@@ -65,7 +67,7 @@ Communication proxy and data handler for the Checkout API
         server.generateRequest();
       },
       _newOptionsAvailable: function(e) {
-        this.fire('options', {});
+        this.fire('getoptionscomplete', {});
 
         var elem = this;
 

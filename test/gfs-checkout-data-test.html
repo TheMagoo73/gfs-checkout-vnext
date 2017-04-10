@@ -105,7 +105,7 @@
             server.restore();
           });
 
-          test('fires event when download completes', function() {
+          test('fires event when download starts', function(done) {
             var element = fixture('events');
             var eventSpy = sinon.spy();
 
@@ -116,7 +116,25 @@
               done();
             }, 2000);
 
-            element.addEventListener('options', eventSpy);
+            element.addEventListener('getoptionsstart', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event when download completes', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 2000);
+            }, 2000);
+
+            element.addEventListener('getoptionscomplete', eventSpy);
             element.checkoutToken = '1234';
             server.respond();
           });
