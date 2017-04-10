@@ -74,8 +74,14 @@ Communication proxy and data handler for the Checkout API
         this._processStandard(function(options){
           elem.fire('newStandardOptions', options);
         });
-        this._processDayDefinite(function(dayDefinite){
-          elem.fire('newDayDefiniteOptions', dayDefinite);
+        this._processStandardDropPoint(function(options){
+          elem.fire('newStandardDropPointOptions', options);
+        });
+        this._processDayDefinite(function(options){
+          elem.fire('newDayDefiniteOptions', options);
+        });
+        this._processDayDefiniteDropPoint(function(options){
+          elem.fire('newDayDefiniteOptionsDropPoint', options);
         });
         this._processDropPoints(function(dropPoints){
           elem.fire('newDropPoints', dropPoints);
@@ -87,7 +93,13 @@ Communication proxy and data handler for the Checkout API
       _processStandard: function(callBack) {
         return callBack( { foo : "bar" } );
       },
+      _processStandardDropPoint: function(callBack) {
+        return callBack( { foo : "bar" } );
+      },
       _processDayDefinite: function(callBack) {
+        return callBack( { foo : "bar" } );
+      },
+      _processDayDefiniteDropPoint: function(callBack) {
         return callBack( { foo : "bar" } );
       },
       _processDropPoints: function(callBack) {
