@@ -29,6 +29,44 @@ Communication proxy and data handler for the Checkout API
 
       is: 'gfs-checkout-data',
 
+      /**
+       * Fired when a request is sent to Checkout.
+       *
+       * @event getoptionsstart
+       */
+
+       /**
+        * Fired when a response is returned from Checkout.
+        *
+        * @event getoptionscomplete
+        */
+
+        /**
+         * Fired when new non-day-definite, non-drop-point options are available.
+         *
+         * @event newstandardoptions
+         */
+         /**
+          * Fired new non-day-definite, drop-point options are available
+          *
+          * @event newstandarddroppointoptions
+          */
+          /**
+           * Fired when new day-definite, non-drop-point options are available
+           *
+           * @event newdaydefiniteoptions
+           */
+           /**
+            * Fired when new day day-definite, drop-point options are available
+            *
+            * @event newdaydefinitedroppointoptions
+            */
+            /**
+             * Fired when new drop-points are available
+             *
+             * @event newdroppoints
+             */
+
       properties: {
         checkoutUri: {
           type: String,
@@ -72,36 +110,69 @@ Communication proxy and data handler for the Checkout API
         var elem = this;
 
         this._processStandard(function(options){
-          elem.fire('newStandardOptions', options);
+          elem.fire('newstandardoptions', options);
         });
         this._processStandardDropPoint(function(options){
-          elem.fire('newStandardDropPointOptions', options);
+          elem.fire('newstandarddroppointoptions', options);
         });
         this._processDayDefinite(function(options){
-          elem.fire('newDayDefiniteOptions', options);
+          elem.fire('newdaydefiniteoptions', options);
         });
         this._processDayDefiniteDropPoint(function(options){
-          elem.fire('newDayDefiniteOptionsDropPoint', options);
+          elem.fire('newdaydefinitedroppointoptions', options);
         });
         this._processDropPoints(function(dropPoints){
-          elem.fire('newDropPoints', dropPoints);
+          elem.fire('newdroppoints', dropPoints);
         });
       },
       _getBearerToken: function() {
         return { "authorization": "Bearer " + this.checkoutToken };
       },
+      /**
+       * Process the current response from Checkout, extract
+       * the non-day-definite services that do not use Drop Points
+       * for delivery, and return an array of objects representing
+       * the services.
+       *
+       */
       _processStandard: function(callBack) {
         return callBack( { foo : "bar" } );
       },
+      /**
+       * Process the current response from Checkout, extract
+       * the non-day-definite services that use Drop Points
+       * for delivery, and return an array of objects representing
+       * the services.
+       *
+       */
       _processStandardDropPoint: function(callBack) {
         return callBack( { foo : "bar" } );
       },
+      /**
+       * Process the current response from Checkout, extract
+       * the day-definite services that do not use Drop Points
+       * for delivery, and return an array of objects representing
+       * the services.
+       *
+       */
       _processDayDefinite: function(callBack) {
         return callBack( { foo : "bar" } );
       },
+      /**
+       * Process the current response from Checkout, extract
+       * the day-definite services that do not Drop Points
+       * for delivery, and return an array of objects representing
+       * the services.
+       *
+       */
       _processDayDefiniteDropPoint: function(callBack) {
         return callBack( { foo : "bar" } );
       },
+      /**
+       * Process the current response from Checkout and return
+       * information on the Drop Points it contains
+       *
+       */
       _processDropPoints: function(callBack) {
         return callBack( { foo : "bar" } );
       }
