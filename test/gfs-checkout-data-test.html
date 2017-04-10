@@ -14,38 +14,131 @@
 
     <test-fixture id="basic">
       <template>
-        <gfs-checkout-data></gfs-checkout-data>
+        <gfs-checkout-data checkout-token="1234"></gfs-checkout-data>
+      </template>
+    </test-fixture>
+    <test-fixture id="authentication">
+      <template>
+        <gfs-checkout-data checkout-request='{"foo":"bar"}'></gfs-checkout-data>
+      </template>
+    </test-fixture>
+    <test-fixture id="events">
+      <template>
+        <gfs-checkout-data checkout-uri="/checkout" checkout-request='{"foo":"bar"}'></gfs-checkout-data>
       </template>
     </test-fixture>
 
-    <script>
+    <script type="text/javascript">
       suite('gfs-checkout-data', function() {
 
-        var server;
+        suite('basic tests', function() {
+          test('instantiating the element works', function() {
+            var element = fixture('basic');
+            assert.equal(element.is, 'gfs-checkout-data');
+          });
 
-        setup(function(){
-          server = sinon.fakeServer.create();
+          test('can create bearer token header', function() {
+            var element = fixture('basic');
+
+            var header = element._getBearerToken();
+            assert.isDefined(header.authorization);
+            assert.isString(header.authorization);
+            assert.equal(header.authorization, "Bearer 1234");
+          });
+        })
+
+        suite('handles authentication with Checkout server', function() {
+
+          var server;
+
+          setup(function(){
+            server = sinon.fakeServer.create();
+          });
+
+          teardown(function(){
+            server.restore();
+          });
+
+          test('passes bearer token in requests', function() {
+            var element = fixture('authentication');
+            element.checkoutToken = '5678';
+            server.respond();
+
+            assert.isAtLeast(server.requests.length, 1);
+            assert.isDefined(server.requests[0].requestHeaders.authorization);
+            assert.equal(server.requests[0].requestHeaders.authorization, "Bearer 5678");
+          });
+
         });
 
-        teardown(function(){
-          server.restore();
+        suite('dispatches events', function() {
+
+          var server;
+
+          setup(function(){
+            server = sinon.fakeServer.create();
+
+            server.respondWith(
+              'POST',
+              /\/checkout.*/, [
+                200,
+                {
+                  json: { 'Content-Type': 'application/json' }
+                },
+                '"/api/checkoutSession/e6189aea-fc6c-48e8-a3e8-f7c9d7e8af2a"'
+              ]
+            );
+
+            server.respondWith(
+              'GET',
+              /\/checkout.*/, [
+                200,
+                {
+                  json: { 'Content-Type': 'application/json' }
+                },
+                '{"success":"true"}'
+              ]
+            );
+          });
+
+          teardown(function(){
+            server.restore();
+          });
+
+          test('fires event when download starts', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              assert(eventSpy.called);
+              assert(eventSpy.calledOnce);
+              done();
+            }, 2000);
+
+            element.addEventListener('getoptionsstart', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event when download completes', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 2000);
+            }, 2000);
+
+            element.addEventListener('getoptionscomplete', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
         });
-
-        test('instantiating the element works', function() {
-          var element = fixture('basic');
-          assert.equal(element.is, 'gfs-checkout-data');
-        });
-
-        test('can create bearer token header', function() {
-          var element = fixture('basic');
-
-          var header = element._getBearerToken();
-          assert.isDefined(header.Authorization);
-          assert.isString(header.Authorization);
-          assert.equal(header.Authorization.substring(0, 7), "Bearer ");
-          assert.include(header.Authorization, element.checkoutToken);
-        });
-
       });
     </script>
   </body>
