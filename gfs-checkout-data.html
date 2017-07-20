@@ -5,7 +5,7 @@
 `gfs-checkout-data`
 Communication proxy and data handler for the Checkout API
 
-@demo demo/index.html
+@demo demo/gfs-checkout-data-demo.html
 -->
 
 <dom-module id="gfs-checkout-data">
@@ -96,7 +96,7 @@ Communication proxy and data handler for the Checkout API
         var server = this.$.createCheckoutSession;
         server.url = this.checkoutUri + "/CheckoutSession"
         server.headers = this._getBearerToken();
-        server.body = JSON.parse(request);
+        server.body = JSON.parse(atob(request));
 
         server.generateRequest();
       },
@@ -109,23 +109,25 @@ Communication proxy and data handler for the Checkout API
         server.generateRequest();
       },
       _newOptionsAvailable: function(e) {
-        this.fire('getoptionscomplete', {});
-
         var elem = this;
+        var newOptions = e.detail.response;
 
-        this._processStandard(function(options){
+        this.fire('getoptionscomplete', newOptions);
+
+
+        this._processStandard(newOptions, function(options){
           elem.fire('newstandardoptions', options);
         });
-        this._processStandardDropPoint(function(options){
+        this._processStandardDropPoint(newOptions, function(options){
           elem.fire('newstandarddroppointoptions', options);
         });
-        this._processDayDefinite(function(options){
+        this._processDayDefinite(newOptions, function(options){
           elem.fire('newdaydefiniteoptions', options);
         });
-        this._processDayDefiniteDropPoint(function(options){
+        this._processDayDefiniteDropPoint(newOptions, function(options){
           elem.fire('newdaydefinitedroppointoptions', options);
         });
-        this._processDropPoints(function(dropPoints){
+        this._processDropPoints(newOptions, function(dropPoints){
           elem.fire('newdroppoints', dropPoints);
         });
       },
@@ -139,7 +141,7 @@ Communication proxy and data handler for the Checkout API
        * the services.
        *
        */
-      _processStandard: function(callBack) {
+      _processStandard: function(options, callBack) {
         return callBack( { foo : "bar" } );
       },
       /**
@@ -149,7 +151,7 @@ Communication proxy and data handler for the Checkout API
        * the services.
        *
        */
-      _processStandardDropPoint: function(callBack) {
+      _processStandardDropPoint: function(options, callBack) {
         return callBack( { foo : "bar" } );
       },
       /**
@@ -159,7 +161,7 @@ Communication proxy and data handler for the Checkout API
        * the services.
        *
        */
-      _processDayDefinite: function(callBack) {
+      _processDayDefinite: function(options, callBack) {
         return callBack( { foo : "bar" } );
       },
       /**
@@ -169,7 +171,7 @@ Communication proxy and data handler for the Checkout API
        * the services.
        *
        */
-      _processDayDefiniteDropPoint: function(callBack) {
+      _processDayDefiniteDropPoint: function(options, callBack) {
         return callBack( { foo : "bar" } );
       },
       /**
@@ -177,8 +179,8 @@ Communication proxy and data handler for the Checkout API
        * information on the Drop Points it contains
        *
        */
-      _processDropPoints: function(callBack) {
-        return callBack( { foo : "bar" } );
+      _processDropPoints: function(options, callBack) {
+        return callBack( options.droppoints );
       }
     });
   </script>
