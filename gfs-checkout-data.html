@@ -142,7 +142,19 @@ Communication proxy and data handler for the Checkout API
        *
        */
       _processStandard: function(options, callBack) {
-        return callBack( { foo : "bar" } );
+        var rates = []
+
+        options.nonDayDefinite.forEach((day) => {
+          day.rates.forEach((rate) => {
+            if(rate.serviceType.type == 'dmStandard')
+            {
+              rate.deliveryDate = day.deliveryDate;
+              rates.push(rate);
+            }
+          });
+        });
+
+        return callBack( rates )
       },
       /**
        * Process the current response from Checkout, extract
@@ -152,7 +164,19 @@ Communication proxy and data handler for the Checkout API
        *
        */
       _processStandardDropPoint: function(options, callBack) {
-        return callBack( { foo : "bar" } );
+        var rates = []
+
+        options.nonDayDefinite.forEach((day) => {
+          day.rates.forEach((rate) => {
+            if(rate.serviceType.type == 'dmStandardDropPoint')
+            {
+              rate.deliveryDate = day.deliveryDate;
+              rates.push(rate);
+            }
+          });
+        });
+
+        return callBack( rates )
       },
       /**
        * Process the current response from Checkout, extract
@@ -162,7 +186,19 @@ Communication proxy and data handler for the Checkout API
        *
        */
       _processDayDefinite: function(options, callBack) {
-        return callBack( { foo : "bar" } );
+        var rates = []
+
+        options.dayDefinite.forEach((day) => {
+          day.rates.forEach((rate) => {
+            if(rate.serviceType.type == 'dmStandard')
+            {
+              rate.deliveryDate = day.deliveryDate;
+              rates.push(rate);
+            }
+          });
+        });
+
+        return callBack( rates )
       },
       /**
        * Process the current response from Checkout, extract
@@ -172,7 +208,19 @@ Communication proxy and data handler for the Checkout API
        *
        */
       _processDayDefiniteDropPoint: function(options, callBack) {
-        return callBack( { foo : "bar" } );
+        var rates = []
+
+        options.dayDefinite.forEach((day) => {
+          day.rates.forEach((rate) => {
+            if(rate.serviceType.type == 'dmStandardDropPoint')
+            {
+              rate.deliveryDate = day.deliveryDate;
+              rates.push(rate);
+            }
+          });
+        });
+
+        return callBack( rates )
       },
       /**
        * Process the current response from Checkout and return

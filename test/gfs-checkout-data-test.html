@@ -97,7 +97,32 @@
                 {
                   json: { 'Content-Type': 'application/json' }
                 },
-                '{"success":"true"}'
+                '{ \
+                  "nonDayDefinite": [ \
+                    { \
+                      "deliveryDate": "2017-04-11T00:00:00", \
+                      "rates": [ \
+                        { \
+                          "serviceType": { \
+                          "type": "dmStandard"} \
+                        } \
+                      ] \
+                    } \
+                  ], \
+                  "dayDefinite": [ \
+                    { \
+                      "deliveryDate": "2017-04-11T00:00:00", \
+                      "rates": [ \
+                        { \
+                          "serviceType": { \
+                          "type": "dmStandard"} \
+                        } \
+                      ] \
+                    } \
+                  ], \
+                  "droppoints": [ \
+                  ] \
+                }'
               ]
             );
           });
