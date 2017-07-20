@@ -19,16 +19,17 @@
     </test-fixture>
     <test-fixture id="authentication">
       <template>
-        <gfs-checkout-data checkout-request='{"foo":"bar"}'></gfs-checkout-data>
+        <gfs-checkout-data checkout-request='eyJmb28iOiJiYXIifQ=='></gfs-checkout-data>
       </template>
     </test-fixture>
     <test-fixture id="events">
       <template>
-        <gfs-checkout-data checkout-uri="/checkout" checkout-request='{"foo":"bar"}'></gfs-checkout-data>
+        <gfs-checkout-data checkout-uri="/checkout" checkout-request='eyJmb28iOiJiYXIifQ=='></gfs-checkout-data>
       </template>
     </test-fixture>
 
     <script type="text/javascript">
+
       suite('gfs-checkout-data', function() {
 
         suite('basic tests', function() {
@@ -96,7 +97,32 @@
                 {
                   json: { 'Content-Type': 'application/json' }
                 },
-                '{"success":"true"}'
+                '{ \
+                  "nonDayDefinite": [ \
+                    { \
+                      "deliveryDate": "2017-04-11T00:00:00", \
+                      "rates": [ \
+                        { \
+                          "serviceType": { \
+                          "type": "dmStandard"} \
+                        } \
+                      ] \
+                    } \
+                  ], \
+                  "dayDefinite": [ \
+                    { \
+                      "deliveryDate": "2017-04-11T00:00:00", \
+                      "rates": [ \
+                        { \
+                          "serviceType": { \
+                          "type": "dmStandard"} \
+                        } \
+                      ] \
+                    } \
+                  ], \
+                  "droppoints": [ \
+                  ] \
+                }'
               ]
             );
           });
@@ -114,7 +140,7 @@
               assert(eventSpy.called);
               assert(eventSpy.calledOnce);
               done();
-            }, 2000);
+            }, 1000);
 
             element.addEventListener('getoptionsstart', eventSpy);
             element.checkoutToken = '1234';
@@ -131,10 +157,100 @@
                 assert(eventSpy.called);
                 assert(eventSpy.calledOnce);
                 done();
-              }, 2000);
-            }, 2000);
+              }, 1000);
+            }, 1000);
 
             element.addEventListener('getoptionscomplete', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event with new drop points', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 1000);
+            }, 1000);
+
+            element.addEventListener('newdroppoints', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event with new standard services', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 1000);
+            }, 1000);
+
+            element.addEventListener('newstandardoptions', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event with new standard drop point services', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 1000);
+            }, 1000);
+
+            element.addEventListener('newstandarddroppointoptions', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event with new day definite services', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 1000);
+            }, 1000);
+
+            element.addEventListener('newdaydefiniteoptions', eventSpy);
+            element.checkoutToken = '1234';
+            server.respond();
+          });
+
+          test('fires event with new day definite drop point services', function(done) {
+            var element = fixture('events');
+            var eventSpy = sinon.spy();
+
+            setTimeout(function () {
+              server.respond();
+              setTimeout(function(){
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();
+              }, 1000);
+            }, 1000);
+
+            element.addEventListener('newdaydefinitedroppointoptions', eventSpy);
             element.checkoutToken = '1234';
             server.respond();
           });
