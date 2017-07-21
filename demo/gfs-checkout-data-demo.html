@@ -9,6 +9,7 @@
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../../paper-tabs/paper-tabs.html">
+    <link rel="import" href="../../iron-pages/iron-pages.html">
 
     <link rel="import" href="../gfs-checkout.html">
 
@@ -22,15 +23,40 @@
   </head>
   <body>
 
-  <script>
+  <script type="text/javascript">
 
     $(function() {
 
-      var el = document.querySelector('gfs-checkout-data');
-      console.log('Adding event handler');
+      var el = document.querySelector('paper-tabs');
+      el.addEventListener('selected-changed', function(e){
+        var r = $('#pages');
+        $('#pages')[0].selected = e.detail.value;
+      })
+
+      el = document.querySelector('gfs-checkout-data');
+
       el.addEventListener('getoptionscomplete', function(e){
-        console.log('New data has arrived');
-        $('#data').text(JSON.stringify(e.detail));
+        $('#data').text(JSON.stringify(e.detail, undefined, 2));
+      })
+
+      el.addEventListener('newstandardoptions', function(e){
+        $('#daydef').text(JSON.stringify(e.detail, undefined, 2));
+      })
+
+      el.addEventListener('newstandarddroppointoptions', function(e){
+        $('#daydefdp').text(JSON.stringify(e.detail, undefined, 2));
+      })
+
+      el.addEventListener('newdaydefiniteoptions', function(e){
+        $('#nondaydef').text(JSON.stringify(e.detail, undefined, 2));
+      })
+
+      el.addEventListener('newdaydefinitedroppointoptions', function(e){
+        $('#nondaydefdp').text(JSON.stringify(e.detail, undefined, 2));
+      })
+
+      el.addEventListener('newdroppoints', function(e){
+        $('#dp').text(JSON.stringify(e.detail, undefined, 2));
       })
 
     })
@@ -51,8 +77,22 @@
       </demo-snippet>
     </div>
     <div>
-      <h4>Server data</h4>
-      <div id='data'></div>
+      <paper-tabs selected="0" id='tabs'>
+        <paper-tab>All data</paper-tab>
+        <paper-tab>Day definite</paper-tab>
+        <paper-tab>Day definite<br/>(Drop Point)</paper-tab>
+        <paper-tab>Non-Day Definite</paper-tab>
+        <paper-tab>Non-Day Definite<br/>(Drop Point)</paper-tab>
+        <paper-tab>Drop Points</paper-tab>
+      </paper-tabs>
+      <iron-pages selected="0" id='pages'>
+        <div><pre><div id='data'></div><pre></div>
+        <div><pre><div id='daydef'></div><pre><div>
+        <div><pre><div id='daydefdp'></div><pre><div>
+        <div><pre><div id='nondaydef'></div><pre><div>
+        <div><pre><div id='nondaydefdp'></div><pre><div>
+        <div><pre><div id='dp'></div><pre><div>
+      </iron-pages>
     </div>
   </body>
 </html>
