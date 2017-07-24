@@ -40,19 +40,19 @@
       })
 
       el.addEventListener('newstandardoptions', function(e){
-        $('#daydef').text(JSON.stringify(e.detail, undefined, 2));
-      })
-
-      el.addEventListener('newstandarddroppointoptions', function(e){
-        $('#daydefdp').text(JSON.stringify(e.detail, undefined, 2));
-      })
-
-      el.addEventListener('newdaydefiniteoptions', function(e){
         $('#nondaydef').text(JSON.stringify(e.detail, undefined, 2));
       })
 
-      el.addEventListener('newdaydefinitedroppointoptions', function(e){
+      el.addEventListener('newstandarddroppointoptions', function(e){
         $('#nondaydefdp').text(JSON.stringify(e.detail, undefined, 2));
+      })
+
+      el.addEventListener('newdaydefiniteoptions', function(e){
+        $('#daydef').text(JSON.stringify(e.detail, undefined, 2));
+      })
+
+      el.addEventListener('newdaydefinitedroppointoptions', function(e){
+        $('#daydefdp').text(JSON.stringify(e.detail, undefined, 2));
       })
 
       el.addEventListener('newdroppoints', function(e){
