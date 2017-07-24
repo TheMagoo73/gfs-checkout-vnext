@@ -1,0 +1,27 @@
+{
+  "name": "gfs-checkout-vnext",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://travis-ci.org/TheMagoo73/codepen-embed.svg?branch=master)](https://travis-ci.org/TheMagoo73/gfs-checkout-vnext.svg?branch=master) [![Build Status](https://saucelabs.com/buildstatus/TheMagoo73)](https://saucelabs.com/beta/builds/11210c11bbf4456dafe1914dbed26428)",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "web-component-tester": "^6.0.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheMagoo73/gfs-checkout-vnext.git"
+  },
+  "author": "John Clarke <themagoo@hotmail.co.uk> (https://github.com/themagoo73)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheMagoo73/gfs-checkout-vnext/issues"
+  },
+  "homepage": "https://github.com/TheMagoo73/gfs-checkout-vnext#readme"
+}
