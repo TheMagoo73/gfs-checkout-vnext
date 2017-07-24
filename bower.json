@@ -12,9 +12,9 @@
     "web-component-tester": "^4.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
     "paper-tabs": "1.8.0",
-    "iron-pages": "^2.0.0"
+    "iron-pages": "^1.0.9"
   },
   "resolutions": {
-    "webcomponentsjs": "^v1.0.2"
+    "webcomponentsjs": "^0.7.24"
   }
 }

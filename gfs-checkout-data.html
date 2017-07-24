@@ -15,12 +15,14 @@ Communication proxy and data handler for the Checkout API
       handle-as="json"
       method="POST"
       on-response="_newSessionStarted"
+      on-error="_optionsError"
       content-type="application/json"></iron-ajax>
     <iron-ajax id='getCheckoutOptions'
       debounce-duration="300"
       handle-as="json"
       method="GET"
       on-response="_newOptionsAvailable"
+      on-error="_optionsError"
       content-type="application/json"></iron-ajax>
   </template>
 
@@ -33,6 +35,12 @@ Communication proxy and data handler for the Checkout API
       * Fired when a request is sent to Checkout.
       *
       * @event getoptionsstart
+      */
+
+      /**
+      * Fired when a request sent to Checkout fails.
+      *
+      * @event getoptionsfailed
       */
 
       /**
@@ -229,6 +237,14 @@ Communication proxy and data handler for the Checkout API
        */
       _processDropPoints: function(options, callBack) {
         return callBack( options.droppoints );
+      },
+      /**
+       * A call to the GFS API failed
+       *
+       */
+      _optionsError: function(e)
+      {
+        this.fire('getoptionsfailed', e)
       }
     });
   </script>

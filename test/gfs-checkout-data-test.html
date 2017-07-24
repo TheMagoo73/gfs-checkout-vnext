@@ -72,6 +72,46 @@
 
         });
 
+        suite('handles server errors', function() {
+
+          var server;
+
+          setup(function(){
+            server = sinon.fakeServer.create();
+
+            server.respondWith(
+              'POST',
+              /\/checkout.*/, [
+                500,
+                {
+                  json: {'Content-Type': 'application/json' }
+                },
+                '""'
+              ]
+            );
+          });
+
+          teardown(function(){
+            server.restore();
+          });
+
+          test('fires an event when the call to the server fails', function(done) {
+              var element = fixture('events');
+              var eventSpy = sinon.spy();
+
+              setTimeout(function () {
+                assert(eventSpy.called);
+                assert(eventSpy.calledOnce);
+                done();             
+              }, 1000);
+
+              element.addEventListener('getoptionsfailed', eventSpy);
+              element.checkoutToken = '666';
+              server.respond();
+          });
+
+        });
+
         suite('dispatches events', function() {
 
           var server;
