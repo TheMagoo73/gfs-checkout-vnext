@@ -12,7 +12,7 @@ module.exports = {
   plugins: {
     local: {
       disabled: false,
-      browsers: ['chrome','ie']
+      browsers: ['chrome','firefox']
     },
     sauce: {
       username: 'TheMagoo73',
