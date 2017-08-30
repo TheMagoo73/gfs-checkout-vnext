@@ -35,7 +35,7 @@
         suite('basic tests', function() {
           test('instantiating the element works', function() {
             var element = fixture('basic');
-            assert.equal(element.is, 'gfs-checkout-data');
+            assert.equal(element.checkoutToken, '1234');
           });
 
           test('can create bearer token header', function() {

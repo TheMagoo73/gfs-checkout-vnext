@@ -27,9 +27,191 @@ Communication proxy and data handler for the Checkout API
   </template>
 
   <script>
-    Polymer({
+    class GfsCheckoutData extends Polymer.Element {
+      static get is() {return 'gfs-checkout-data';}
 
-      is: 'gfs-checkout-data',
+      static get properties() {
+        return {
+          checkoutUri: {
+            type: String,
+            value: "http://rest.api.checkout.justshoutgfs.com/api"
+          },
+          checkoutRequest: {
+            type: String,
+            value: ""
+          },
+          checkoutToken: {
+            type: String,
+            value: ""
+          }        
+        };
+      }
+
+      static get observers() {
+        return [
+          '_updateResponse(checkoutRequest, checkoutToken)'
+        ]
+      }
+
+       _updateResponse(request, token) {
+        if(request === "" || token === "") return;
+
+        this.dispatchEvent(new CustomEvent('getoptionsstart', {}));
+
+        var server = this.$.createCheckoutSession;
+        server.url = this.checkoutUri + "/CheckoutSession"
+        server.headers = this._getBearerToken();
+        server.body = JSON.parse(atob(request));
+
+        server.generateRequest();
+      }
+
+      _newSessionStarted(e) {
+        var server = this.$.getCheckoutOptions;
+        var sessionId = e.detail.response.substring(e.detail.response.lastIndexOf("/") + 1);
+
+        server.url = this.checkoutUri + "/CheckoutSession/" + sessionId;
+        server.headers = this._getBearerToken();
+        server.generateRequest();
+      }
+
+      _newOptionsAvailable(e) {
+        var elem = this;
+        var newOptions = e.detail.response;
+        var t = this;
+
+        this.dispatchEvent(new CustomEvent('getoptionscomplete', newOptions));
+
+        this._processStandard(newOptions, function(options){
+          t.dispatchEvent(new CustomEvent('newstandardoptions', options));
+        });
+        this._processStandardDropPoint(newOptions, function(options){
+          t.dispatchEvent(new CustomEvent('newstandarddroppointoptions', options));
+        });
+        this._processDayDefinite(newOptions, function(options){
+          t.dispatchEvent(new CustomEvent('newdaydefiniteoptions', options));
+        });
+        this._processDayDefiniteDropPoint(newOptions, function(options){
+          t.dispatchEvent(new CustomEvent('newdaydefinitedroppointoptions', options));
+        });
+        this._processDropPoints(newOptions, function(dropPoints){
+          t.dispatchEvent(new CustomEvent('newdroppoints', dropPoints));
+        });
+      }
+
+      _getBearerToken() {
+        return { "authorization": "Bearer " + this.checkoutToken };
+      }
+
+      /**
+       * Process the current response from Checkout, extract
+       * the non-day-definite services that do not use Drop Points
+       * for delivery, and return an array of objects representing
+       * the services.
+       *
+       */
+      _processStandard(options, callBack) {
+        var rates = []
+
+        options.nonDayDefinite.forEach((day) => {
+          day.rates.forEach((rate) => {
+            if(rate.serviceType.type == 'dmStandard')
+            {
+              rate.deliveryDate = day.deliveryDate;
+              rates.push(rate);
+            }
+          });
+        });
+
+        return callBack( rates )
+      }
+
+      /**
+       * Process the current response from Checkout, extract
+       * the non-day-definite services that use Drop Points
+       * for delivery, and return an array of objects representing
+       * the services.
+       *
+       */
+      _processStandardDropPoint(options, callBack) {
+        var rates = []
+
+        options.nonDayDefinite.forEach((day) => {
+          day.rates.forEach((rate) => {
+            if(rate.serviceType.type == 'dmStandardDropPoint')
+            {
+              rate.deliveryDate = day.deliveryDate;
+              rates.push(rate);
+            }
+          });
+        });
+
+        return callBack( rates )
+      }
+
+      /**
+       * Process the current response from Checkout, extract
+       * the day-definite services that do not use Drop Points
+       * for delivery, and return an array of objects representing
+       * the services.
+       *
+       */
+      _processDayDefinite(options, callBack) {
+        var rates = []
+
+        options.dayDefinite.forEach((day) => {
+          day.rates.forEach((rate) => {
+            if(rate.serviceType.type == 'dmStandard')
+            {
+              rate.deliveryDate = day.deliveryDate;
+              rates.push(rate);
+            }
+          });
+        });
+
+        return callBack( rates )
+      }
+
+      /**
+       * Process the current response from Checkout, extract
+       * the day-definite services that do not Drop Points
+       * for delivery, and return an array of objects representing
+       * the services.
+       *
+       */
+      _processDayDefiniteDropPoint(options, callBack) {
+        var rates = []
+
+        options.dayDefinite.forEach((day) => {
+          day.rates.forEach((rate) => {
+            if(rate.serviceType.type == 'dmStandardDropPoint')
+            {
+              rate.deliveryDate = day.deliveryDate;
+              rates.push(rate);
+            }
+          });
+        });
+
+        return callBack( rates )
+      }
+
+      /**
+       * Process the current response from Checkout and return
+       * information on the Drop Points it contains
+       *
+       */
+      _processDropPoints(options, callBack) {
+        return callBack( options.droppoints );
+      }
+
+      /**
+       * A call to the GFS API failed
+       *
+       */
+      _optionsError(e)
+      {
+        this.dispatchEvent(new CustomEvent('getoptionsfailed', e));
+      }
 
       /**
       * Fired when a request is sent to Checkout.
@@ -78,174 +260,9 @@ Communication proxy and data handler for the Checkout API
       *
       * @event newdroppoints
       */
+    };
 
-      properties: {
-        checkoutUri: {
-          type: String,
-          value: "http://rest.api.checkout.justshoutgfs.com/api"
-        },
-        checkoutRequest: {
-          type: String,
-          value: ""
-        },
-        checkoutToken: {
-          type: String,
-          value: ""
-        }
-      },
-      observers: [
-        '_updateResponse(checkoutRequest, checkoutToken)'
-      ],
-      _updateResponse: function(request, token) {
-        if(request === "" || token === "") return;
+    window.customElements.define(GfsCheckoutData.is, GfsCheckoutData);
 
-        this.fire('getoptionsstart')
-
-        var server = this.$.createCheckoutSession;
-        server.url = this.checkoutUri + "/CheckoutSession"
-        server.headers = this._getBearerToken();
-        server.body = JSON.parse(atob(request));
-
-        server.generateRequest();
-      },
-      _newSessionStarted: function(e) {
-        var server = this.$.getCheckoutOptions;
-        var sessionId = e.detail.response.substring(e.detail.response.lastIndexOf("/") + 1);
-
-        server.url = this.checkoutUri + "/CheckoutSession/" + sessionId;
-        server.headers = this._getBearerToken();
-        server.generateRequest();
-      },
-      _newOptionsAvailable: function(e) {
-        var elem = this;
-        var newOptions = e.detail.response;
-
-        this.fire('getoptionscomplete', newOptions);
-
-
-        this._processStandard(newOptions, function(options){
-          elem.fire('newstandardoptions', options);
-        });
-        this._processStandardDropPoint(newOptions, function(options){
-          elem.fire('newstandarddroppointoptions', options);
-        });
-        this._processDayDefinite(newOptions, function(options){
-          elem.fire('newdaydefiniteoptions', options);
-        });
-        this._processDayDefiniteDropPoint(newOptions, function(options){
-          elem.fire('newdaydefinitedroppointoptions', options);
-        });
-        this._processDropPoints(newOptions, function(dropPoints){
-          elem.fire('newdroppoints', dropPoints);
-        });
-      },
-      _getBearerToken: function() {
-        return { "authorization": "Bearer " + this.checkoutToken };
-      },
-      /**
-       * Process the current response from Checkout, extract
-       * the non-day-definite services that do not use Drop Points
-       * for delivery, and return an array of objects representing
-       * the services.
-       *
-       */
-      _processStandard: function(options, callBack) {
-        var rates = []
-
-        options.nonDayDefinite.forEach((day) => {
-          day.rates.forEach((rate) => {
-            if(rate.serviceType.type == 'dmStandard')
-            {
-              rate.deliveryDate = day.deliveryDate;
-              rates.push(rate);
-            }
-          });
-        });
-
-        return callBack( rates )
-      },
-      /**
-       * Process the current response from Checkout, extract
-       * the non-day-definite services that use Drop Points
-       * for delivery, and return an array of objects representing
-       * the services.
-       *
-       */
-      _processStandardDropPoint: function(options, callBack) {
-        var rates = []
-
-        options.nonDayDefinite.forEach((day) => {
-          day.rates.forEach((rate) => {
-            if(rate.serviceType.type == 'dmStandardDropPoint')
-            {
-              rate.deliveryDate = day.deliveryDate;
-              rates.push(rate);
-            }
-          });
-        });
-
-        return callBack( rates )
-      },
-      /**
-       * Process the current response from Checkout, extract
-       * the day-definite services that do not use Drop Points
-       * for delivery, and return an array of objects representing
-       * the services.
-       *
-       */
-      _processDayDefinite: function(options, callBack) {
-        var rates = []
-
-        options.dayDefinite.forEach((day) => {
-          day.rates.forEach((rate) => {
-            if(rate.serviceType.type == 'dmStandard')
-            {
-              rate.deliveryDate = day.deliveryDate;
-              rates.push(rate);
-            }
-          });
-        });
-
-        return callBack( rates )
-      },
-      /**
-       * Process the current response from Checkout, extract
-       * the day-definite services that do not Drop Points
-       * for delivery, and return an array of objects representing
-       * the services.
-       *
-       */
-      _processDayDefiniteDropPoint: function(options, callBack) {
-        var rates = []
-
-        options.dayDefinite.forEach((day) => {
-          day.rates.forEach((rate) => {
-            if(rate.serviceType.type == 'dmStandardDropPoint')
-            {
-              rate.deliveryDate = day.deliveryDate;
-              rates.push(rate);
-            }
-          });
-        });
-
-        return callBack( rates )
-      },
-      /**
-       * Process the current response from Checkout and return
-       * information on the Drop Points it contains
-       *
-       */
-      _processDropPoints: function(options, callBack) {
-        return callBack( options.droppoints );
-      },
-      /**
-       * A call to the GFS API failed
-       *
-       */
-      _optionsError: function(e)
-      {
-        this.fire('getoptionsfailed', e)
-      }
-    });
   </script>
 </dom-module>
