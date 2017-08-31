@@ -20,20 +20,19 @@ A better GFS Checkout web component implementation
   </template>
 
   <script>
-    Polymer({
+    class GfsCheckout extends Polymer.Element {
+      static get is() {return 'gfs-checkout';}
+    
+      static get properties() {
+        return {
 
-      is: 'gfs-checkout',
-
-      properties: {
-        prop1: {
-          type: String,
-          value: 'gfs-checkout',
-        },
-      },
-      ready : function() {
-        console.log("GFS Checkout - ready");
+        }
       }
+    
+    
+    }
 
-    });
+     window.customElements.define(GfsCheckout.is, GfsCheckout);
+
   </script>
 </dom-module>

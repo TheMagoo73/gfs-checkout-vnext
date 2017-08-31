@@ -34,7 +34,7 @@ Communication proxy and data handler for the Checkout API
         return {
           checkoutUri: {
             type: String,
-            value: "http://rest.api.checkout.justshoutgfs.com/api"
+            value: "http://rest-checkout.justshoutgfs.com/api"
           },
           checkoutRequest: {
             type: String,
@@ -56,7 +56,7 @@ Communication proxy and data handler for the Checkout API
        _updateResponse(request, token) {
         if(request === "" || token === "") return;
 
-        this.dispatchEvent(new CustomEvent('getoptionsstart', {}));
+        this.dispatchEvent(new CustomEvent('getoptionsstart', {bubbles: true, composed: true, detail: {}}));
 
         var server = this.$.createCheckoutSession;
         server.url = this.checkoutUri + "/CheckoutSession"
@@ -80,22 +80,22 @@ Communication proxy and data handler for the Checkout API
         var newOptions = e.detail.response;
         var t = this;
 
-        this.dispatchEvent(new CustomEvent('getoptionscomplete', newOptions));
+        this.dispatchEvent(new CustomEvent('getoptionscomplete', {bubbles: true, composed: true, detail: newOptions}));
 
         this._processStandard(newOptions, function(options){
-          t.dispatchEvent(new CustomEvent('newstandardoptions', options));
+          t.dispatchEvent(new CustomEvent('newstandardoptions', {bubbles: true, composed: true, detail: options}));
         });
         this._processStandardDropPoint(newOptions, function(options){
-          t.dispatchEvent(new CustomEvent('newstandarddroppointoptions', options));
+          t.dispatchEvent(new CustomEvent('newstandarddroppointoptions', {bubbles: true, composed: true, detail: options}));
         });
         this._processDayDefinite(newOptions, function(options){
-          t.dispatchEvent(new CustomEvent('newdaydefiniteoptions', options));
+          t.dispatchEvent(new CustomEvent('newdaydefiniteoptions', {bubbles: true, composed: true, detail: options}));
         });
         this._processDayDefiniteDropPoint(newOptions, function(options){
-          t.dispatchEvent(new CustomEvent('newdaydefinitedroppointoptions', options));
+          t.dispatchEvent(new CustomEvent('newdaydefinitedroppointoptions', {bubbles: true, composed: true, detail: options}));
         });
         this._processDropPoints(newOptions, function(dropPoints){
-          t.dispatchEvent(new CustomEvent('newdroppoints', dropPoints));
+          t.dispatchEvent(new CustomEvent('newdroppoints', {bubbles: true, composed: true, detail: dropPoints}));
         });
       }
 
@@ -210,7 +210,7 @@ Communication proxy and data handler for the Checkout API
        */
       _optionsError(e)
       {
-        this.dispatchEvent(new CustomEvent('getoptionsfailed', e));
+        this.dispatchEvent(new CustomEvent('getoptionsfailed', {bubbles: true, composed: true, detail: e}));
       }
 
       /**
