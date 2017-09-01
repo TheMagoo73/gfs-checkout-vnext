@@ -12,7 +12,9 @@
     "web-component-tester": "^6.1.3",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "paper-tabs": "2.0.0",
-    "iron-pages": "^2.0.0"
+    "iron-pages": "^2.0.0",
+    "promise-polyfill": "PolymerLabs/promise-polyfill",
+    "test-fixture": "PolymerElements/test-fixture#^3.0.0-rc.1"
   }
 }
 
