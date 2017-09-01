@@ -1,5 +1,12 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="gfs-checkout-data.html">
+<link rel="import" href="../paper-card/paper-card.html">
+<link rel="import" href="../paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../iron-collapse/iron-collapse.html">
+<link rel="import" href="../paper-expansion-panel/paper-expansion-panel.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
 
 <!--
 `gfs-checkout`
@@ -15,7 +22,55 @@ A better GFS Checkout web component implementation
         display: block;
       }
     </style>
-    <gfs-checkout-data id="server"></gfs-checkout-data>
+
+    <gfs-checkout-data id="server"
+      checkout-token="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkZWZkNlRFJSZkdGZDBYQnZPSmpYX2txNjFSRSIsImtpZCI6IkZWZkNlRFJSZkdGZDBYQnZPSmpYX2txNjFSRSJ9.eyJpc3MiOiJodHRwczovL2lkZW50aXR5Lmp1c3RzaG91dGdmcy5jb20iLCJhdWQiOiJodHRwczovL2lkZW50aXR5Lmp1c3RzaG91dGdmcy5jb20vcmVzb3VyY2VzIiwiZXhwIjoxNjA0MTk3ODQyLCJuYmYiOjE1MDQxOTc4NDMsImNsaWVudF9pZCI6ImFtYml0aW91c19hbGljZSIsImxpdmUtYXBpLWtleSI6IkNMLTRDRTkyNjEzLTg5QTYtNDI0OC1BNTczLUE5QTczMzNFNkEwNiIsInRlc3QtYXBpLWtleSI6IkNMLTQ1MDBGQzFBLTdEQzQtNDdBQi1BRTkyLUUxNDI2RTExOTE5QiIsImRldi1hcGkta2V5IjoiQ0wtNDUwMEZDMUEtN0RDNC00N0FCLUFFOTItRTE0MjZFMTE5MTlCIiwic2NvcGUiOlsiY2hlY2tvdXQtYXBpIiwicmVhZCJdfQ.wqqydQCH-KxM3nJR-J6ggePSFnwFXXThzvPM78jL6l_QURjwNVxDe77JLfqRntnZK6Nupr2CkpX_1MZOH-4vqKLyfUNx_ZKQpqaH3eSmGzuHAWr9iDGcSWR_AdE3smbsJdlWdQgSrBciG6WhFqTMdA2YME6tT-cs1jIAhezWZvlx920sz69Kof3S6YNacNxDLBUfQwrLfjfBOdnCNfC1r2ECj1Tav2_ld1UcWpq9JPfyr_veYUHIxVLCMd-toNYnVs1BfU9G6yYiec8tFQtFVj--H7NS-vvWfzGrfXjWVySdmGBOxJzNfGmALkbkMPyzhDllKsto46zGYhIAa8vHPGfWa7UYJVGfN2qBRS6-Q4Vo19_6NJQ5CoVoNSIjMYKHBaHQp2J4WEwxlMu2qR7wfdsNEgT1w7FSt7p5-UbrT0UHYPJWqoPbKx_hJmDczI3WWtd4U6-WL9Vg2BXksQRLyBMlclpe2qqNykoecdDkbT5ureGxLuoObWl9NqaRTOx4JXZ9dW3siwI02ePwX3Roh9Gy08iCcMQxxFI1acRA8gFzDg2rBoYrzPEU5qRX5FSEuENn0M0NoYdqRhcjje09ksz-v5v8E0AbhhbOjih5cPatQBAMbKPHajHs3CVDcbqHA1MJc5GYsXoU5jb88GfsHSLPA3khB6lcgs2HQom5pRY"
+      checkout-request="eyJSZXF1ZXN0Ijp7IkRhdGVSYW5nZSI6eyJEYXRlRnJvbSI6IjIwMTctMDgtMzEiLCJEYXRlVG8iOiIyMDE3LTA5LTE0In0sIk9yZGVyIjp7IlRyYW5zaXQiOnsiUmVjaXBpZW50Ijp7IkNvbnRhY3REZXRhaWxzIjp7IkVtYWlsIjoiZ3Vlc3RAZ3Vlc3QuY29tIn0sIkxvY2F0aW9uIjp7IkFkZHJlc3NMaW5lQ29sbGVjdGlvbiI6WyIxMDAgU3RhdGlvbiBSb2FkIl0sIkNvdW50cnlDb2RlIjp7IkNvZGUiOiJHQiIsIkVuY29kaW5nIjoiY2NJU09fMzE2Nl8xX0FscGhhMiJ9LCJQb3N0Y29kZSI6IlJIMTMgNVVaIiwiVG93biI6IkhvcnNoYW0ifSwiUGVyc29uIjp7IkZpcnN0TmFtZSI6IkEiLCJMYXN0TmFtZSI6IkN1c3RvbWVyIiwiVGl0bGUiOiJNUiJ9fX0sIkNvbnRlbnRzIjpbeyJRdWFudGl0eSI6MSwiRGVzY3JpcHRpb24iOiJCbHVlIFBhcnR5IFNob2VzIiwiUHJvZHVjdENvZGUiOjEwLCJJdGVtVmFsdWUiOnsiQ3VycmVuY3lDb2RlIjoiR0JQIiwiVmFsdWUiOjQ1Ljk5fX1dLCJWYWx1ZSI6eyJDdXJyZW5jeUNvZGUiOiJHQlAiLCJWYWx1ZSI6NDUuOTl9fSwiUmVxdWVzdGVkRGVsaXZlcnlUeXBlcyI6WyJkbURyb3BQb2ludCIsImRtU3RhbmRhcmQiXSwiU2Vzc2lvbiI6e319fQ=="
+      on-getoptionscomplete="_newOptions"></gfs-checkout-data>
+
+    <paper-dialog id="dayDefiniteDialog" modal entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+      <h2>Select delivery time</h2>
+      <gfs-checkout-date-definite-selector></gfs-checkout-date-definite-selector>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>Save</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="addressEntryDialog" modal entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+      <h2>Delivery address</h2>
+      <gfs-checkout-address-entry id="addressEditor" recipient-name="[[recipientName]]" company="[[company]]" address="[[address}}" city="[[city]]" region="[[region]]" postcode='[[postcode]]'></gfs-checkout-address-entry>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>Save</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="dropPointMapDialog" modal entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+      <h2>Select Click+Collect location</h2>
+      <gfs-checkout-droppoint-entry postcode="[[postcode]]"></gfs-checkout-droppoint-entry>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>Save</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-expansion-panel header="When would you like your delivery?" summary="[[_selectedServiceSummary]]">
+      <div class="card-content">
+        <paper-radio-group selected="{{selectedService}}" id="serviceSelection">
+          <paper-radio-button name="asap" id="asap">As soon as possible (£5.00)</paper-radio-button></br>
+          <paper-radio-button name="non-day-definite">2-4 days (£3.50)</paper-radio-button></br>
+          <paper-radio-button name="day-definite" id="dayDefinite">Select a time and date (from £5.00)</paper-radio-button><paper-button on-click="_showDayDefiniteDialog">Select delivery window...</paper-button></br>
+        </paper-radio-group>
+      </div>
+    </paper-expansion-panel>
+
+    <paper-expansion-panel header="Deliver to" summary="[[_deliveryAddressText]]">
+      <paper-radio-group selected="address">
+        <paper-radio-button name="address">My address</paper-radio-button><paper-button on-click="_showAddressDialog">Edit delivery address...</paper-button></br>
+        <paper-radio-button name="droppoint" id="droppoint">Collect from Click &amp; Collect location</paper-radio-button><paper-button on-click="_showDropPointMap">Select Click+Collect location...</paper-button></br>
+      </paper-radio-group>
+    </paper-expansion-panel>
   </template>
 
   <script>
@@ -28,6 +83,9 @@ A better GFS Checkout web component implementation
         }
       }
     
+      _newOptions(e) {
+        console.log('I have new options!');
+      }
     
     }
 
